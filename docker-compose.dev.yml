@@ -1,0 +1,132 @@
+# ============================================================================
+# AgentOrchestra - Docker Compose (Development)
+# Hot-reload, source mounting, debug ports
+# ============================================================================
+
+version: "3.9"
+
+# ---------------------------------------------------------------------------
+# Service definitions
+# ---------------------------------------------------------------------------
+services:
+  # =======================================================================
+  # Backend - Python FastAPI (Development)
+  # =======================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: agentorchestra-backend-dev
+    restart: unless-stopped
+    env_file:
+      - backend/.env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - LOG_LEVEL=debug
+      - DEBUG=true
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    volumes:
+      # Mount source code for hot-reload
+      - ./backend:/app
+      # Exclude virtual environment from host
+      - backend_cache:/app/.venv
+    networks:
+      - app-network
+    ports:
+      - "8000:8000"   # FastAPI
+      - "5678:5678"   # Debugger (debugpy)
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: >
+      uvicorn app.main:app
+        --host 0.0.0.0
+        --port 8000
+        --reload
+        --reload-dir /app
+        --log-level debug
+
+  # =======================================================================
+  # Frontend - Next.js 14 (Development)
+  # =======================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: agentorchestra-frontend-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+    volumes:
+      # Mount source code for hot-reload
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/next.config.js:/app/next.config.js
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tailwind.config.ts:/app/tailwind.config.ts
+      - ./frontend/postcss.config.js:/app/postcss.config.js
+    networks:
+      - app-network
+    ports:
+      - "3000:3000"   # Next.js dev server
+      - "9229:9229"   # Node.js debugger
+    depends_on:
+      backend:
+        condition: service_started
+    command: pnpm dev
+
+  # =======================================================================
+  # Redis - In-memory data store (Development)
+  # =======================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: agentorchestra-redis-dev
+    restart: unless-stopped
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru --loglevel debug
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - app-network
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # =======================================================================
+  # Redis Commander - Web-based Redis management UI
+  # =======================================================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: agentorchestra-redis-commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    networks:
+      - app-network
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+# ---------------------------------------------------------------------------
+# Named volumes
+# ---------------------------------------------------------------------------
+volumes:
+  redis_dev_data:
+    driver: local
+  backend_cache:
+    driver: local
+
+# ---------------------------------------------------------------------------
+# Networks
+# ---------------------------------------------------------------------------
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,173 @@
+# ============================================================================
+# AgentOrchestra - Pre-commit Hooks Configuration
+# https://pre-commit.com
+# ============================================================================
+
+minimum_pre_commit_version: "3.0.0"
+
+default_stages: [commit, push]
+
+# ---------------------------------------------------------------------------
+# Global settings
+# ---------------------------------------------------------------------------
+fail_fast: false
+ci:
+  autofix_commit_msg: |
+    chore: auto-fix by pre-commit hooks
+  autoupdate_commit_msg: |
+    chore: update pre-commit hooks
+
+# ---------------------------------------------------------------------------
+# Hooks
+# ---------------------------------------------------------------------------
+repos:
+  # =======================================================================
+  # General file checks
+  # =======================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        exclude_types: [markdown]
+
+      - id: end-of-file-fixer
+        name: Fix end of files
+        exclude_types: [svg]
+
+      - id: check-yaml
+        name: Check YAML files
+        args: ["--unsafe"]
+
+      - id: check-json
+        name: Check JSON files
+
+      - id: check-toml
+        name: Check TOML files
+
+      - id: check-added-large-files
+        name: Check for large files
+        args: ["--maxkb=1024"]
+
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+
+      - id: check-case-conflict
+        name: Check for case conflicts
+
+      - id: check-docstring-first
+        name: Check docstring is first
+
+      - id: detect-private-key
+        name: Detect private keys
+
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ["--fix=lf"]
+
+      - id: no-commit-to-branch
+        name: Prevent commits to main/develop
+        args: ["--branch", "main", "--branch", "develop"]
+
+  # =======================================================================
+  # Python - Ruff (linting + formatting)
+  # =======================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff
+        name: Ruff lint (Python)
+        args: ["--fix", "--exit-non-zero-on-fix"]
+        entry: ruff check --fix --exit-non-zero-on-fix
+        types_or: [python, pyi]
+
+      - id: ruff-format
+        name: Ruff format (Python)
+        types_or: [python, pyi]
+
+  # =======================================================================
+  # Python - mypy (type checking)
+  # =======================================================================
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.0
+    hooks:
+      - id: mypy
+        name: Mypy type check
+        args: ["--ignore-missing-imports", "--no-error-summary"]
+        additional_dependencies:
+          - types-redis
+          - types-requests
+          - types-pyyaml
+        pass_filenames: false
+        entry: mypy app/
+        files: ^backend/
+
+  # =======================================================================
+  # JavaScript / TypeScript - ESLint
+  # =======================================================================
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.7.0
+    hooks:
+      - id: eslint
+        name: ESLint (JavaScript/TypeScript)
+        files: ^frontend/
+        types: [javascript, jsx, ts, tsx]
+        additional_dependencies:
+          - eslint@^9.0.0
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
+          - eslint-config-next
+        args: ["--fix", "--max-warnings=0"]
+
+  # =======================================================================
+  # Prettier (formatting for non-Python files)
+  # =======================================================================
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        name: Prettier (format)
+        types_or: [javascript, jsx, ts, tsx, json, yaml, markdown, css, html, svg]
+        files: ^frontend/
+        args: ["--write", "--single-quote", "--trailing-comma=all"]
+
+  # =======================================================================
+  # Docker
+  # =======================================================================
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        name: Hadolint (Dockerfile lint)
+        files: Dockerfile*
+
+  # =======================================================================
+  # YAML / JSON validation
+  # =======================================================================
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        name: Yamllint
+        args: ["-d", "{extends: relaxed, rules: {line-length: disable}}"]
+        files: \.(ya?ml)$
+
+  # =======================================================================
+  # Commit message
+  # =======================================================================
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.3.0
+    hooks:
+      - id: conventional-pre-commit
+        name: Conventional commit message
+        stages: [commit-msg]
+        args: [feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert]
+
+  # =======================================================================
+  # Security
+  # =======================================================================
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+        name: Gitleaks (detect secrets)

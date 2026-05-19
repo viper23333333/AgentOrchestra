@@ -1,0 +1,309 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================
+   CSS 自定义属性（设计令牌）
+   =========================================== */
+:root {
+  /* 主色调 */
+  --color-primary: 99 102 241;
+  --color-primary-hover: 79 70 229;
+  --color-primary-light: 129 140 248;
+
+  /* 背景色 */
+  --bg-primary: 255 255 255;
+  --bg-secondary: 248 250 252;
+  --bg-tertiary: 241 245 249;
+  --bg-chat: 248 250 252;
+  --bg-sidebar: 15 23 42;
+  --bg-sidebar-hover: 30 41 59;
+  --bg-sidebar-active: 51 65 85;
+
+  /* 文本色 */
+  --text-primary: 15 23 42;
+  --text-secondary: 71 85 105;
+  --text-tertiary: 148 163 184;
+  --text-inverse: 248 250 252;
+
+  /* 边框色 */
+  --border-primary: 226 232 240;
+  --border-secondary: 203 213 225;
+  --border-focus: 99 102 241;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* 间距 */
+  --header-height: 64px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 72px;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* 过渡 */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+/* 暗色模式 */
+.dark {
+  --bg-primary: 15 23 42;
+  --bg-secondary: 30 41 59;
+  --bg-tertiary: 51 65 85;
+  --bg-chat: 15 23 42;
+  --text-primary: 248 250 252;
+  --text-secondary: 203 213 225;
+  --text-tertiary: 148 163 184;
+  --border-primary: 51 65 85;
+  --border-secondary: 71 85 105;
+}
+
+/* ===========================================
+   基础样式重置
+   =========================================== */
+@layer base {
+  * {
+    @apply border-surface-200 dark:border-surface-700;
+  }
+
+  body {
+    @apply bg-surface-50 text-surface-900 dark:bg-surface-950 dark:text-surface-50;
+    @apply antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* 自定义滚动条 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-300 dark:bg-surface-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surface-400 dark:bg-surface-500;
+  }
+
+  /* 选中文本样式 */
+  ::selection {
+    @apply bg-primary-200 dark:bg-primary-800;
+  }
+
+  /* 焦点可见性 */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-500;
+  }
+}
+
+/* ===========================================
+   组件样式
+   =========================================== */
+@layer components {
+  /* 玻璃态效果 */
+  .glass {
+    @apply bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl;
+    @apply border border-white/20 dark:border-surface-700/50;
+  }
+
+  /* 渐变文字 */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-500 via-purple-500 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  /* 卡片悬浮效果 */
+  .card-hover {
+    @apply transition-all duration-200 ease-out;
+    @apply hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  /* 消息气泡 */
+  .message-bubble {
+    @apply rounded-2xl px-4 py-3;
+    @apply max-w-[80%] md:max-w-[70%];
+  }
+
+  .message-bubble-user {
+    @apply bg-primary-500 text-white;
+    @apply rounded-br-md;
+  }
+
+  .message-bubble-agent {
+    @apply bg-white dark:bg-surface-800;
+    @apply border border-surface-200 dark:border-surface-700;
+    @apply rounded-bl-md;
+  }
+
+  /* 代码块样式 */
+  .code-block {
+    @apply rounded-lg overflow-hidden;
+    @apply bg-surface-900 dark:bg-surface-950;
+    @apply border border-surface-700;
+  }
+
+  .code-block pre {
+    @apply p-4 overflow-x-auto;
+    @apply text-sm font-mono;
+    @apply text-surface-100;
+  }
+
+  /* Agent 状态指示灯 */
+  .status-dot {
+    @apply w-2.5 h-2.5 rounded-full;
+    @apply inline-block;
+  }
+
+  .status-dot-active {
+    @apply bg-accent-500;
+    @apply animate-pulse;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  }
+
+  .status-dot-idle {
+    @apply bg-surface-400;
+  }
+
+  .status-dot-error {
+    @apply bg-red-500;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+  }
+
+  .status-dot-thinking {
+    @apply bg-primary-400;
+    @apply animate-pulse;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+  }
+
+  /* 工作流连线 */
+  .workflow-line {
+    @apply stroke-surface-300 dark:stroke-surface-600;
+    @apply stroke-2;
+  }
+
+  .workflow-line-active {
+    @apply stroke-primary-500;
+    @apply animate-pulse;
+  }
+}
+
+/* ===========================================
+   工具类
+   =========================================== */
+@layer utilities {
+  /* 隐藏滚动条但保留滚动功能 */
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 文本截断 */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Markdown 内容样式 */
+  .markdown-content h1 {
+    @apply text-2xl font-bold mt-6 mb-3;
+  }
+
+  .markdown-content h2 {
+    @apply text-xl font-bold mt-5 mb-2;
+  }
+
+  .markdown-content h3 {
+    @apply text-lg font-semibold mt-4 mb-2;
+  }
+
+  .markdown-content p {
+    @apply mb-3 leading-relaxed;
+  }
+
+  .markdown-content ul {
+    @apply list-disc pl-6 mb-3 space-y-1;
+  }
+
+  .markdown-content ol {
+    @apply list-decimal pl-6 mb-3 space-y-1;
+  }
+
+  .markdown-content li {
+    @apply leading-relaxed;
+  }
+
+  .markdown-content blockquote {
+    @apply border-l-4 border-primary-300 dark:border-primary-600 pl-4 py-1 mb-3;
+    @apply bg-surface-100 dark:bg-surface-800 rounded-r-lg;
+    @apply italic text-surface-600 dark:text-surface-400;
+  }
+
+  .markdown-content code {
+    @apply bg-surface-100 dark:bg-surface-800 px-1.5 py-0.5 rounded;
+    @apply text-sm font-mono text-primary-600 dark:text-primary-400;
+  }
+
+  .markdown-content pre {
+    @apply mb-3;
+  }
+
+  .markdown-content pre code {
+    @apply bg-transparent p-0;
+    @apply text-surface-100;
+  }
+
+  .markdown-content table {
+    @apply w-full border-collapse mb-3;
+  }
+
+  .markdown-content th {
+    @apply bg-surface-100 dark:bg-surface-800 px-3 py-2 text-left font-semibold;
+    @apply border border-surface-200 dark:border-surface-700;
+  }
+
+  .markdown-content td {
+    @apply px-3 py-2;
+    @apply border border-surface-200 dark:border-surface-700;
+  }
+
+  .markdown-content a {
+    @apply text-primary-500 hover:text-primary-600 underline;
+  }
+
+  .markdown-content hr {
+    @apply my-4 border-surface-200 dark:border-surface-700;
+  }
+}
