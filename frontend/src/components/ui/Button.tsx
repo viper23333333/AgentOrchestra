@@ -78,6 +78,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isLoading;
 
     return (
+      // @ts-expect-error framer-motion type conflict
       <motion.button
         ref={ref}
         whileHover={isDisabled ? undefined : { scale: 1.01 }}

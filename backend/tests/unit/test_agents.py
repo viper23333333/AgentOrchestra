@@ -17,8 +17,7 @@ from app.agents.planner.agent import PlannerAgent
 from app.agents.researcher.agent import ResearcherAgent
 from app.agents.reviewer.agent import ReviewerAgent
 from app.agents.summarizer.agent import SummarizerAgent
-from app.schemas.agent import AgentConfig, AgentType
-
+from app.schemas.agent import AgentResponse, AgentType
 
 # ---------------------------------------------------------------------------
 # Tests: Base Agent
@@ -320,7 +319,7 @@ class TestAllAgentTypes:
 
     @pytest.mark.parametrize("name,cls,expected_type", AGENT_CLASSES)
     @pytest.mark.asyncio
-    async def test_agent_has_correct_type(self, name, cls, expected_type):
+    async def test_agent_has_correct_type(self, _name, cls, expected_type):
         """Verify each agent has the correct AgentType."""
         with patch("app.agents.base.get_settings") as mock_settings:
             mock_settings.return_value = MagicMock(
@@ -366,7 +365,7 @@ class TestAllAgentTypes:
 
     @pytest.mark.parametrize("name,cls,expected_type", AGENT_CLASSES)
     @pytest.mark.asyncio
-    async def test_agent_has_name(self, name, cls, expected_type):
+    async def test_agent_has_name(self, _name, cls, _expected_type):
         """Verify each agent has a non-empty name."""
         with patch("app.agents.base.get_settings") as mock_settings:
             mock_settings.return_value = MagicMock(
@@ -413,7 +412,7 @@ class TestAllAgentTypes:
 
     @pytest.mark.parametrize("name,cls,expected_type", AGENT_CLASSES)
     @pytest.mark.asyncio
-    async def test_agent_has_system_prompt(self, name, cls, expected_type):
+    async def test_agent_has_system_prompt(self, _name, cls, _expected_type):
         """Verify each agent has a non-empty system prompt."""
         with patch("app.agents.base.get_settings") as mock_settings:
             mock_settings.return_value = MagicMock(

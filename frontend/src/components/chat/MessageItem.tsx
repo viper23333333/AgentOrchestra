@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -9,7 +9,7 @@ import { Copy, Check, User, Bot, AlertCircle } from 'lucide-react';
 import { useState, useCallback } from 'react';
 import { cn, formatRelativeTime, getAgentColorClass, getAgentBgColorClass } from '@/lib/utils';
 import { AGENT_TYPE_LABELS } from '@/types';
-import type { Message, AgentType } from '@/types';
+import type { Message } from '@/types';
 
 /**
  * 单条消息组件

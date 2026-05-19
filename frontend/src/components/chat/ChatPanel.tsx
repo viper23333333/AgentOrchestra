@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Plus } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
@@ -32,7 +32,6 @@ export default function ChatPanel({ className }: ChatPanelProps) {
     error,
     typingAgentIds,
     sendMessage,
-    createNewConversation,
     stopGeneration,
     clearError,
   } = useChat();
@@ -47,11 +46,6 @@ export default function ChatPanel({ className }: ChatPanelProps) {
     },
     [sendMessage]
   );
-
-  /** 创建新对话处理 */
-  const handleNewConversation = useCallback(() => {
-    createNewConversation();
-  }, [createNewConversation]);
 
   return (
     <div className={cn('flex-1 flex flex-col overflow-hidden', className)}>

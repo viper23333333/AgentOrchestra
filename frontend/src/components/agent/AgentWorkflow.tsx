@@ -9,9 +9,8 @@ import {
   FileText,
   ArrowRight,
 } from 'lucide-react';
-import { cn, getAgentColorClass, getAgentBgColorClass, getAgentStatusStyle } from '@/lib/utils';
-import { AGENT_TYPE_LABELS, type AgentType, type AgentStatus, type Workflow } from '@/types';
-import AgentStatusBadge from './AgentStatusBadge';
+import { cn, getAgentColorClass, getAgentBgColorClass } from '@/lib/utils';
+import { type AgentType, type AgentStatus, type Workflow } from '@/types';
 
 /**
  * Agent 工作流可视化组件
@@ -80,14 +79,12 @@ function WorkflowNode({
   index,
   isActive,
   isCompleted,
-  status,
   message,
 }: {
   step: (typeof WORKFLOW_STEPS)[number];
   index: number;
   isActive: boolean;
   isCompleted: boolean;
-  status?: AgentStatus;
   message?: string;
 }) {
   const IconComponent = AGENT_ICONS[step.type];
@@ -226,12 +223,11 @@ function ConnectionLine({ isActive }: { isActive: boolean }) {
  * AgentWorkflow 组件
  */
 export default function AgentWorkflow({
-  workflow,
   agentStates,
   className,
 }: AgentWorkflowProps) {
   /** 确定每个步骤的状态 */
-  const getStepStatus = (agentType: AgentType): { isActive: boolean; isCompleted: boolean; status?: AgentStatus; message?: string } => {
+  const getStepStatus = (agentType: AgentType): { isActive: boolean; isCompleted: boolean; message?: string } => {
     if (!agentStates) return { isActive: false, isCompleted: false };
 
     for (const [agentId, state] of agentStates.entries()) {
@@ -239,7 +235,6 @@ export default function AgentWorkflow({
         return {
           isActive: state.status === 'thinking' || state.status === 'working',
           isCompleted: state.status === 'completed',
-          status: state.status,
           message: state.message,
         };
       }
@@ -263,7 +258,7 @@ export default function AgentWorkflow({
       {/* 工作流图 */}
       <div className="flex items-start overflow-x-auto pb-4 scrollbar-hidden">
         {WORKFLOW_STEPS.map((step, index) => {
-          const { isActive, isCompleted, status, message } = getStepStatus(step.type);
+          const { isActive, isCompleted, message } = getStepStatus(step.type);
 
           return (
             <div key={step.type} className="flex items-start">
@@ -272,7 +267,6 @@ export default function AgentWorkflow({
                 index={index}
                 isActive={isActive}
                 isCompleted={isCompleted}
-                status={status}
                 message={message}
               />
 

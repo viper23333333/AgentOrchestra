@@ -251,8 +251,8 @@ The Reviewer's output determines the next step in the workflow:
 ```mermaid
 flowchart TD
     Reviewer{Reviewer Decision}
-    Reviewer --|"Needs Revision<br/>AND revision_count < max"| Coder["Coder (Revision)"]
-    Reviewer --|"Approved<br/>OR revision_count >= max"| Summarizer
+    Reviewer -->|"Needs Revision<br/>AND revision_count < max"| Coder["Coder (Revision)"]
+    Reviewer -->|"Approved<br/>OR revision_count >= max"| Summarizer
 ```
 
 - If revision is needed and the revision count is below the maximum, the workflow routes back to the Coder

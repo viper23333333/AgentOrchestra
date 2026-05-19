@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Bot, Settings, Moon, Sun, ChevronDown } from 'lucide-react';
+import { Bot, Settings, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Select from '@/components/ui/Select';
 import { cn } from '@/lib/utils';
 import { AVAILABLE_MODELS } from '@/types';
-import type { ModelOption } from '@/types';
 
 /**
  * 顶部导航栏组件
@@ -43,11 +41,6 @@ export default function Header({
   onSettingsClick,
   className,
 }: HeaderProps) {
-  const [isModelSelectorOpen, setIsModelSelectorOpen] = useState(false);
-
-  /** 当前选中的模型信息 */
-  const currentModel = AVAILABLE_MODELS.find((m) => m.id === selectedModel);
-
   /** 按模型提供商分组 */
   const modelGroups = AVAILABLE_MODELS.reduce(
     (acc, model) => {
@@ -96,6 +89,7 @@ export default function Header({
             value={selectedModel}
             onChange={(e) => onModelChange?.(e.target.value)}
             groups={Object.values(modelGroups)}
+            options={[]}
             size="sm"
             className="w-44 sm:w-56 bg-surface-50 dark:bg-surface-800/50"
           />

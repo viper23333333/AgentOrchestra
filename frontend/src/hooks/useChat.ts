@@ -46,7 +46,6 @@ interface UseChatReturn {
 export function useChat(): UseChatReturn {
   const {
     activeConversationId,
-    conversations,
     isSending,
     isLoading,
     error,
@@ -56,7 +55,6 @@ export function useChat(): UseChatReturn {
     updateMessage,
     appendMessageContent,
     setSending,
-    setLoading,
     setError,
     addTypingAgent,
     removeTypingAgent,
@@ -138,11 +136,11 @@ export function useChat(): UseChatReturn {
         const controller = chatService.sendMessageStream(
           { conversationId, content: content.trim(), stream: true },
           {
-            onToken: (messageId, token) => {
+            onToken: (_messageId, token) => {
               appendMessageContent(conversationId, assistantMessageId, token);
             },
 
-            onComplete: (messageId, fullContent) => {
+            onComplete: (_messageId, fullContent) => {
               updateMessage(conversationId, assistantMessageId, {
                 status: 'sent',
                 content: fullContent,

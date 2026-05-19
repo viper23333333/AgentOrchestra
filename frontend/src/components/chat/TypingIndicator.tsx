@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { cn, getAgentColorClass, getAgentBgColorClass } from '@/lib/utils';
+import { cn, getAgentColorClass } from '@/lib/utils';
 import { AGENT_TYPE_LABELS, type AgentType } from '@/types';
 
 /**
@@ -37,7 +37,6 @@ function inferAgentType(agentId: string): AgentType {
 function AgentTypingDot({ agentId }: { agentId: string }) {
   const agentType = inferAgentType(agentId);
   const colorClass = getAgentColorClass(agentType);
-  const bgClass = getAgentBgColorClass(agentType);
 
   return (
     <motion.div

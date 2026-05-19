@@ -27,7 +27,6 @@ interface MessageListProps {
  */
 export default function MessageList({
   messages,
-  isSending = false,
   className,
 }: MessageListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +58,7 @@ export default function MessageList({
     >
       <div className="max-w-4xl mx-auto space-y-6">
         <AnimatePresence mode="popLayout">
-          {messages.map((message, index) => (
+          {messages.map((message) => (
             <motion.div
               key={message.id}
               layout

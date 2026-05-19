@@ -129,8 +129,8 @@ flowchart TD
     Researcher["Researcher Agent - Gather information"] --> Coder
     Coder["Coder Agent - Generate code"] --> Reviewer
     Reviewer{"Reviewer Agent - Review code quality"}
-    Reviewer --|Needs Revision| Coder
-    Reviewer --|Approved| Summarizer
+    Reviewer -->|Needs Revision| Coder
+    Reviewer -->|Approved| Summarizer
     Summarizer["Summarizer Agent - Compile final summary"] --> End([Final Response])
 
     style Planner fill:#6C5CE7,color:#fff

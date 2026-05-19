@@ -52,7 +52,6 @@ interface UseSSEReturn {
 export function useSSE(options: UseSSEOptions): UseSSEReturn {
   const {
     url,
-    headers = {},
     autoConnect = true,
     reconnectInterval = 3000,
     maxReconnectAttempts = 5,

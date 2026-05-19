@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAgentStore } from '@/store/agent-store';
 import { agentService } from '@/services/agent-service';
 import type { Agent, AgentConfig, Workflow } from '@/types';
@@ -61,7 +61,6 @@ export function useAgents(conversationId?: string): UseAgentsReturn {
     setError,
     selectAgent,
     updateAgent,
-    getActiveAgents,
     hasActiveAgents,
   } = useAgentStore();
 

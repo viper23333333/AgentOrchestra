@@ -7,8 +7,8 @@ mock LLM adapters, and sample data generators.
 
 from __future__ import annotations
 
-import asyncio
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -72,11 +72,13 @@ def _override_settings():
         base_url="http://localhost:11434",
     )
 
-    with patch("app.config.settings.get_settings", return_value=mock_settings):
-        with patch("app.models.llm_models.get_settings", return_value=mock_settings):
-            with patch("app.services.llm.provider.get_settings", return_value=mock_settings):
-                with patch("app.services.memory.conversation.get_settings", return_value=mock_settings):
-                    yield mock_settings
+    with (
+        patch("app.config.settings.get_settings", return_value=mock_settings),
+        patch("app.models.llm_models.get_settings", return_value=mock_settings),
+        patch("app.services.llm.provider.get_settings", return_value=mock_settings),
+        patch("app.services.memory.conversation.get_settings", return_value=mock_settings),
+    ):
+        yield mock_settings
 
 
 # ---------------------------------------------------------------------------
@@ -111,13 +113,13 @@ def mock_llm_adapter(mock_llm_response: str) -> MagicMock:
     adapter.model_name = "mock-model"
 
     # Mock invoke
-    async def mock_invoke(messages, **kwargs):
+    async def mock_invoke(_messages, **_kwargs):
         return AIMessage(content=mock_llm_response)
 
     adapter.invoke = AsyncMock(side_effect=mock_invoke)
 
     # Mock stream
-    async def mock_stream(messages, **kwargs):
+    async def mock_stream(_messages, **_kwargs):
         for word in mock_llm_response.split():
             yield word + " "
 

@@ -12,7 +12,7 @@ import {
   Clock,
   Zap,
 } from 'lucide-react';
-import { cn, getAgentColorClass, getAgentBgColorClass, getAgentBorderColorClass, getAgentStatusStyle, formatRelativeTime } from '@/lib/utils';
+import { cn, getAgentColorClass, getAgentBgColorClass, getAgentBorderColorClass, formatRelativeTime } from '@/lib/utils';
 import { AGENT_TYPE_LABELS, type Agent, type AgentType } from '@/types';
 import AgentStatusBadge from './AgentStatusBadge';
 
@@ -58,7 +58,6 @@ const AgentCard = memo(function AgentCard({
   const colorClass = getAgentColorClass(agent.type);
   const bgClass = getAgentBgColorClass(agent.type);
   const borderClass = getAgentBorderColorClass(agent.type);
-  const statusStyle = getAgentStatusStyle(agent.status);
 
   return (
     <motion.div

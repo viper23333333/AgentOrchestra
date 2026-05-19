@@ -4,7 +4,6 @@ import { useState, useRef, useCallback, type KeyboardEvent, type ChangeEvent } f
 import { Send, Square, Paperclip, Mic } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import Button from '@/components/ui/Button';
 
 /**
  * 聊天输入框组件
@@ -29,9 +28,6 @@ interface ChatInputProps {
   /** 自定义类名 */
   className?: string;
 }
-
-/** 最大输入行数 */
-const MAX_ROWS = 8;
 
 /** 最小/最大高度 */
 const MIN_HEIGHT = 44;

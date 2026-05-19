@@ -6,12 +6,10 @@ import {
   Plus,
   MessageSquare,
   Trash2,
-  MoreHorizontal,
   PanelLeftClose,
-  PanelLeft,
   Search,
 } from 'lucide-react';
-import { cn, formatRelativeTime, truncateText } from '@/lib/utils';
+import { cn, formatRelativeTime } from '@/lib/utils';
 import { useChatStore } from '@/store/chat-store';
 import type { Conversation } from '@/types';
 

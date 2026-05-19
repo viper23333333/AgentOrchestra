@@ -14,7 +14,6 @@ import pytest
 from app.core.orchestrator import Orchestrator, OrchestratorState
 from app.schemas.agent import AgentResponse, AgentType
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

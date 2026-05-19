@@ -1,11 +1,9 @@
 import type {
-  Message,
   Conversation,
   ConversationConfig,
-  AgentState,
   Task,
 } from '@/types';
-import { conversationApi, agentApi, taskApi } from '@/lib/api';
+import { conversationApi, taskApi } from '@/lib/api';
 import { generateId } from '@/lib/utils';
 
 /**
