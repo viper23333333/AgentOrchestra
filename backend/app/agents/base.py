@@ -229,9 +229,7 @@ class BaseAgent(abc.ABC):
             elapsed_ms = (time.perf_counter() - start_time) * 1000
             self._state.status = AgentStatus.ERROR
             self._state.error_message = str(e)
-            self._state.last_updated = (
-                __import__("datetime").datetime.utcnow()
-            )
+            self._state.last_updated = __import__("datetime").datetime.utcnow()
 
             logger.error(
                 "Agent '%s' failed after %.1fms: %s",

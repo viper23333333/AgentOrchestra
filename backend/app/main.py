@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,14 +23,14 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     """Application lifespan handler.
 
     Manages startup and shutdown events for the FastAPI application.
     Initializes services on startup and cleans up on shutdown.
 
     Args:
-        app: The FastAPI application instance.
+        _app: The FastAPI application instance (unused, required by FastAPI).
 
     Yields:
         None: Control to the application.
@@ -65,13 +65,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("AgentOrchestra shutting down...")
 
     # Close Redis connections if open
-    try:
-        from app.services.memory.conversation import RedisConversationMemory
-
-        # Note: In a real app, you'd keep a reference to close properly
-        logger.info("Cleanup complete")
-    except Exception:
-        pass
+    # Note: In a real app, you'd keep a reference to close properly
+    logger.info("Cleanup complete")
 
     logger.info("AgentOrchestra stopped.")
 
@@ -121,7 +116,7 @@ def create_application() -> FastAPI:
 
     # --- Exception Handlers ---
     @app.exception_handler(ValueError)
-    async def value_error_handler(request: Request, exc: ValueError):
+    async def value_error_handler(_request: Request, exc: ValueError):
         """Handle ValueError exceptions."""
         logger.warning("ValueError: %s", str(exc))
         return JSONResponse(
@@ -130,7 +125,7 @@ def create_application() -> FastAPI:
         )
 
     @app.exception_handler(Exception)
-    async def general_exception_handler(request: Request, exc: Exception):
+    async def general_exception_handler(_request: Request, exc: Exception):
         """Handle all unhandled exceptions."""
         logger.error(
             "Unhandled exception: %s",

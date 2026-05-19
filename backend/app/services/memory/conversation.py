@@ -305,9 +305,7 @@ class RedisConversationMemory(BaseConversationMemory):
             await redis.rpush(key, json.dumps(message_data))
             await redis.expire(key, self.ttl)
         except Exception as e:
-            raise ConversationMemoryError(
-                f"Failed to save message: {e}", backend="redis"
-            ) from e
+            raise ConversationMemoryError(f"Failed to save message: {e}", backend="redis") from e
 
     async def get_history(
         self,

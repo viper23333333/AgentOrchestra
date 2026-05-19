@@ -10,7 +10,8 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Any
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 
@@ -107,9 +108,7 @@ class LLMServiceProvider:
         except LLMAdapterError as e:
             raise LLMServiceError(str(e), self.provider_name) from e
         except Exception as e:
-            raise LLMServiceError(
-                f"Unexpected error: {e}", self.provider_name
-            ) from e
+            raise LLMServiceError(f"Unexpected error: {e}", self.provider_name) from e
 
     async def chat_stream(
         self,

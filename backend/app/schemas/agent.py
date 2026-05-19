@@ -8,13 +8,13 @@ and other agent-specific data structures.
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class AgentType(str, Enum):
+class AgentType(StrEnum):
     """Enumeration of available agent types."""
 
     PLANNER = "planner"
@@ -24,7 +24,7 @@ class AgentType(str, Enum):
     SUMMARIZER = "summarizer"
 
 
-class AgentStatus(str, Enum):
+class AgentStatus(StrEnum):
     """Enumeration of agent runtime statuses."""
 
     IDLE = "idle"
@@ -54,7 +54,9 @@ class AgentConfig(BaseModel):
     agent_type: AgentType = Field(..., description="Agent type")
     description: str = Field(..., min_length=1, description="Agent description")
     model: str | None = Field(default=None, description="LLM model override")
-    temperature: float | None = Field(default=None, ge=0.0, le=2.0, description="Temperature override")
+    temperature: float | None = Field(
+        default=None, ge=0.0, le=2.0, description="Temperature override"
+    )
     max_tokens: int | None = Field(default=None, ge=1, le=128000, description="Max tokens override")
     system_prompt: str | None = Field(default=None, description="Custom system prompt")
     tools: list[str] = Field(default_factory=list, description="Available tools")
@@ -110,9 +112,7 @@ class AgentResponse(BaseModel):
     agent_type: AgentType = Field(..., description="Agent type")
     success: bool = Field(default=True, description="Execution success flag")
     content: str = Field(default="", description="Primary output content")
-    artifacts: list[dict[str, Any]] = Field(
-        default_factory=list, description="Output artifacts"
-    )
+    artifacts: list[dict[str, Any]] = Field(default_factory=list, description="Output artifacts")
     metadata: dict[str, Any] = Field(default_factory=dict, description="Execution metadata")
     execution_time_ms: float | None = Field(default=None, description="Execution time")
     error: str | None = Field(default=None, description="Error message if failed")

@@ -80,11 +80,28 @@ class JSONFormatter(logging.Formatter):
         # Add extra fields from the record
         for key, value in record.__dict__.items():
             if key not in {
-                "name", "msg", "args", "created", "relativeCreated",
-                "exc_info", "exc_text", "stack_info", "lineno", "funcName",
-                "pathname", "filename", "module", "thread", "threadName",
-                "process", "processName", "levelname", "levelno", "message",
-                "msecs", "taskName",
+                "name",
+                "msg",
+                "args",
+                "created",
+                "relativeCreated",
+                "exc_info",
+                "exc_text",
+                "stack_info",
+                "lineno",
+                "funcName",
+                "pathname",
+                "filename",
+                "module",
+                "thread",
+                "threadName",
+                "process",
+                "processName",
+                "levelname",
+                "levelno",
+                "message",
+                "msecs",
+                "taskName",
             }:
                 log_entry[key] = value
 
@@ -103,11 +120,11 @@ class ColoredFormatter(logging.Formatter):
 
     # ANSI color codes
     COLORS: dict[str, str] = {
-        "DEBUG": "\033[36m",     # Cyan
-        "INFO": "\033[32m",      # Green
-        "WARNING": "\033[33m",   # Yellow
-        "ERROR": "\033[31m",     # Red
-        "CRITICAL": "\033[1;31m", # Bold Red
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
+        "CRITICAL": "\033[1;31m",  # Bold Red
     }
     RESET = "\033[0m"
 

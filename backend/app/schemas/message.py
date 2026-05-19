@@ -9,13 +9,13 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class MessageRole(str, Enum):
+class MessageRole(StrEnum):
     """Enumeration of possible message roles in a conversation."""
 
     USER = "user"
@@ -24,7 +24,7 @@ class MessageRole(str, Enum):
     AGENT = "agent"
 
 
-class MessageType(str, Enum):
+class MessageType(StrEnum):
     """Enumeration of message types for classification."""
 
     TEXT = "text"
@@ -54,13 +54,17 @@ class ChatMessage(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
     metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
-    model_config = {"json_schema_extra": {"examples": [
-        {
-            "role": "user",
-            "content": "Help me build a REST API with FastAPI",
-            "message_type": "text",
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "role": "user",
+                    "content": "Help me build a REST API with FastAPI",
+                    "message_type": "text",
+                }
+            ]
         }
-    ]}}
+    }
 
 
 class AgentMessage(BaseModel):
@@ -101,8 +105,9 @@ class TaskStep(BaseModel):
         output: The output/result of executing this step.
     """
 
-    class Status(str, Enum):
+    class Status(StrEnum):
         """Status of a task step."""
+
         PENDING = "pending"
         IN_PROGRESS = "in_progress"
         COMPLETED = "completed"
@@ -153,8 +158,9 @@ class TaskResult(BaseModel):
         created_at: Timestamp when the result was produced.
     """
 
-    class Status(str, Enum):
+    class Status(StrEnum):
         """Final task status."""
+
         SUCCESS = "success"
         PARTIAL = "partial"
         FAILED = "failed"

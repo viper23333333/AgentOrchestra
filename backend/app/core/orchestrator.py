@@ -11,7 +11,8 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Any, AsyncIterator, TypedDict
+from collections.abc import AsyncIterator
+from typing import Any, TypedDict
 
 from langgraph.graph import END, StateGraph
 
@@ -21,7 +22,6 @@ from app.agents.researcher.agent import ResearcherAgent
 from app.agents.reviewer.agent import ReviewerAgent
 from app.agents.summarizer.agent import SummarizerAgent
 from app.config.settings import get_settings
-from app.schemas.agent import AgentResponse
 from app.schemas.message import TaskResult
 
 logger = logging.getLogger(__name__)
@@ -116,9 +116,7 @@ class Orchestrator:
 
         # Build the workflow graph
         self.graph = self._build_graph()
-        logger.info(
-            "Orchestrator initialized (max_revisions=%d)", self.max_revisions
-        )
+        logger.info("Orchestrator initialized (max_revisions=%d)", self.max_revisions)
 
     def _build_graph(self) -> StateGraph:
         """Build and compile the LangGraph workflow.
@@ -182,9 +180,7 @@ class Orchestrator:
         return {
             "plan_output": response.content,
             "current_agent": "planner",
-            "agent_responses": state.get("agent_responses", []) + [
-                response.model_dump()
-            ],
+            "agent_responses": state.get("agent_responses", []) + [response.model_dump()],
         }
 
     async def _researcher_node(self, state: OrchestratorState) -> dict[str, Any]:
@@ -205,9 +201,7 @@ class Orchestrator:
         return {
             "research_output": response.content,
             "current_agent": "researcher",
-            "agent_responses": state.get("agent_responses", []) + [
-                response.model_dump()
-            ],
+            "agent_responses": state.get("agent_responses", []) + [response.model_dump()],
         }
 
     async def _coder_node(self, state: OrchestratorState) -> dict[str, Any]:
@@ -232,9 +226,7 @@ class Orchestrator:
         return {
             "code_output": response.content,
             "current_agent": "coder",
-            "agent_responses": state.get("agent_responses", []) + [
-                response.model_dump()
-            ],
+            "agent_responses": state.get("agent_responses", []) + [response.model_dump()],
         }
 
     async def _reviewer_node(self, state: OrchestratorState) -> dict[str, Any]:
@@ -259,9 +251,7 @@ class Orchestrator:
             "review_output": response.content,
             "review_feedback": response.content if response.metadata.get("needs_revision") else "",
             "current_agent": "reviewer",
-            "agent_responses": state.get("agent_responses", []) + [
-                response.model_dump()
-            ],
+            "agent_responses": state.get("agent_responses", []) + [response.model_dump()],
         }
 
     async def _summarizer_node(self, state: OrchestratorState) -> dict[str, Any]:
@@ -288,9 +278,7 @@ class Orchestrator:
         return {
             "summary_output": response.content,
             "current_agent": "summarizer",
-            "agent_responses": state.get("agent_responses", []) + [
-                response.model_dump()
-            ],
+            "agent_responses": state.get("agent_responses", []) + [response.model_dump()],
         }
 
     # -----------------------------------------------------------------------

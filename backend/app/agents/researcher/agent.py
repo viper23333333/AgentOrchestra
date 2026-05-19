@@ -151,8 +151,7 @@ class ResearcherAgent(BaseAgent):
             try:
                 search_response = await self._search_tool.search(query, num_results=5)
                 results_text = "\n".join(
-                    f"- [{r.title}]({r.url}): {r.snippet}"
-                    for r in search_response.results
+                    f"- [{r.title}]({r.url}): {r.snippet}" for r in search_response.results
                 )
                 all_results.append(f"Query: {query}\nResults:\n{results_text}")
                 logger.info(

@@ -114,16 +114,16 @@ async def create_task(request: TaskCreateRequest) -> TaskInfo:
         task.result = task_result.model_dump()
         task.completed_at = datetime.utcnow()
 
-        logger.info("Task %s completed in %.1fms", task_id, task_result.total_execution_time_ms or 0)
+        logger.info(
+            "Task %s completed in %.1fms", task_id, task_result.total_execution_time_ms or 0
+        )
 
         return task
 
     except Exception as e:
         task.status = "failed"
         logger.error("Task %s failed: %s", task_id, str(e), exc_info=True)
-        raise HTTPException(
-            status_code=500, detail=f"Task execution failed: {str(e)}"
-        ) from e
+        raise HTTPException(status_code=500, detail=f"Task execution failed: {str(e)}") from e
 
 
 @router.get(
@@ -182,7 +182,5 @@ async def get_task(task_id: str) -> TaskInfo:
     """
     task = _tasks.get(task_id)
     if not task:
-        raise HTTPException(
-            status_code=404, detail=f"Task '{task_id}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Task '{task_id}' not found")
     return task

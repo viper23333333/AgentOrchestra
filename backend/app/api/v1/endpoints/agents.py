@@ -88,9 +88,7 @@ async def get_agent(agent_id: str) -> AgentInfo:
     """
     agent_data = _agent_registry.get(agent_id)
     if not agent_data:
-        raise HTTPException(
-            status_code=404, detail=f"Agent '{agent_id}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Agent '{agent_id}' not found")
 
     info = agent_data["info"]
     return AgentInfo(
@@ -126,9 +124,7 @@ async def update_agent_config(
     """
     agent_data = _agent_registry.get(agent_id)
     if not agent_data:
-        raise HTTPException(
-            status_code=404, detail=f"Agent '{agent_id}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Agent '{agent_id}' not found")
 
     try:
         # Update only non-None fields
@@ -144,6 +140,4 @@ async def update_agent_config(
         }
     except Exception as e:
         logger.error("Failed to update agent config: %s", str(e), exc_info=True)
-        raise HTTPException(
-            status_code=500, detail=f"Configuration update failed: {str(e)}"
-        ) from e
+        raise HTTPException(status_code=500, detail=f"Configuration update failed: {str(e)}") from e

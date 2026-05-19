@@ -142,10 +142,7 @@ class CoderAgent(BaseAgent):
         # Add plan context if available
         plan = context.get("plan")
         if plan:
-            if isinstance(plan, dict):
-                plan_text = plan.get("objective", str(plan))
-            else:
-                plan_text = str(plan)
+            plan_text = plan.get("objective", str(plan)) if isinstance(plan, dict) else str(plan)
             prompt_parts.append(f"## Execution Plan\n{plan_text}")
 
         # Add research context if available

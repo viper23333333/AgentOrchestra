@@ -20,7 +20,6 @@ from app.schemas.message import (
     ChatRequest,
     ChatResponse,
     MessageType,
-    TaskResult,
 )
 
 logger = logging.getLogger(__name__)
@@ -183,8 +182,7 @@ async def get_history(
     all_conversations = list(_task_store.items())[:limit]
     return {
         "conversations": [
-            {"conversation_id": cid, "data": data}
-            for cid, data in all_conversations
+            {"conversation_id": cid, "data": data} for cid, data in all_conversations
         ],
         "total": len(_task_store),
     }

@@ -8,9 +8,9 @@ safely. Includes resource limits, timeout enforcement, and output capture.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import io
 import logging
-import contextlib
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -80,7 +80,6 @@ class CodeExecutor:
         self.max_output_length = max_output_length
 
         # Build restricted builtins
-        import builtins
 
         safe_builtins = {
             "print": print,
@@ -184,7 +183,7 @@ class CodeExecutor:
                 execution_time_ms=elapsed_ms,
                 error=str(result) if result else None,
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             elapsed_ms = (time.perf_counter() - start_time) * 1000
             return CodeExecutionResult(
                 success=False,
@@ -221,24 +220,22 @@ class CodeExecutor:
         Returns:
             BaseException | None: The exception if one occurred, else None.
         """
-        # Redirect stdout/stderr
-        old_stdout = io.StringIO()
-        old_stderr = io.StringIO()
-
         try:
-            with contextlib.redirect_stdout(stdout_capture):
-                with contextlib.redirect_stderr(stderr_capture):
-                    # Compile first to catch syntax errors
-                    compiled = compile(code, "<sandbox>", "exec")
+            with (
+                contextlib.redirect_stdout(stdout_capture),
+                contextlib.redirect_stderr(stderr_capture),
+            ):
+                # Compile first to catch syntax errors
+                compiled = compile(code, "<sandbox>", "exec")
 
-                    # Create restricted namespace
-                    namespace: dict[str, Any] = {
-                        "__builtins__": self.RESTRICTED_BUILTINS,
-                        "__name__": "__sandbox__",
-                    }
+                # Create restricted namespace
+                namespace: dict[str, Any] = {
+                    "__builtins__": self.RESTRICTED_BUILTINS,
+                    "__name__": "__sandbox__",
+                }
 
-                    # Execute
-                    exec(compiled, namespace)  # noqa: S102
+                # Execute
+                exec(compiled, namespace)  # noqa: S102
 
             return None
         except Exception as e:
