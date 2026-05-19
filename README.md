@@ -125,13 +125,13 @@ graph TB
 ```mermaid
 flowchart TD
     Start([User Request]) --> Planner
-    Planner["<b>Planner Agent</b><br/>Analyze task & create plan"] --> Researcher
-    Researcher["<b>Researcher Agent</b><br/>Gather information & context"] --> Coder
-    Coder["<b>Coder Agent</b><br/>Generate code & solutions"] --> Reviewer
-    Reviewer{"<b>Reviewer Agent</b><br/>Review code quality"}
-    Reviewer --|"Needs Revision<br/>(round < max)"| Coder
-    Reviewer --|"Approved<br/>(or max rounds reached)"| Summarizer
-    Summarizer["<b>Summarizer Agent</b><br/>Compile final summary"] --> End([Final Response])
+    Planner["Planner Agent - Analyze task and create plan"] --> Researcher
+    Researcher["Researcher Agent - Gather information"] --> Coder
+    Coder["Coder Agent - Generate code"] --> Reviewer
+    Reviewer{"Reviewer Agent - Review code quality"}
+    Reviewer --|Needs Revision| Coder
+    Reviewer --|Approved| Summarizer
+    Summarizer["Summarizer Agent - Compile final summary"] --> End([Final Response])
 
     style Planner fill:#6C5CE7,color:#fff
     style Researcher fill:#00B894,color:#fff
